@@ -3,26 +3,26 @@ package com.nyahonk.multiplatformweather.android
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.nyahonk.multiplatformweather.Greeting
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import com.nyahonk.multiplatformweather.Greeting
 import com.nyahonk.multiplatformweather.android.datasource.HardwareDatasource
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.util.function.Consumer
 
 class MainActivity : AppCompatActivity() {
 
     private val MY_PERMISSIONS_REQUEST_LOCATION = 99
     private var locationPermitted = false
-    set(value) {
-        field = value
-        updateData()
-    }
+        set(value) {
+            field = value
+            updateData()
+        }
 
     private val mainScope = MainScope()
 
@@ -47,13 +47,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateData() {
-        val locationListener = LocationListener {
+        tv.text = "getting data"
+        val locationConsumer = Consumer<Location> {
             mainScope.launch {
                 kotlin.runCatching {
                     shared.getPollutionData(it.longitude, it.latitude)
                 }.onSuccess {
                     tv.text = it
                 }.onFailure {
+                    tv.text = it.localizedMessage
                     Toast.makeText(
                         this@MainActivity,
                         it.localizedMessage,
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        hardwareDatasource.getGeoData(locationListener)
+        hardwareDatasource.getGeoData(locationConsumer)
     }
 
     override fun onRequestPermissionsResult(

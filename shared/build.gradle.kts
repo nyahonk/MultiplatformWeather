@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     kotlin("multiplatform")
@@ -10,19 +9,6 @@ plugins {
 }
 
 version = "1.0"
-
-ext["apiKey"] = null
-
-val secretPropsFile = project.rootProject.file("local.properties")
-if (secretPropsFile.exists()) {
-    secretPropsFile.reader().use {
-        Properties().apply {
-            load(it)
-        }
-    }.onEach { (name, value) ->
-        ext[name.toString()] = value
-    }
-}
 
 kotlin {
     android()

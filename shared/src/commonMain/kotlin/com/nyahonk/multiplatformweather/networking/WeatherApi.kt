@@ -1,5 +1,6 @@
 package com.nyahonk.multiplatformweather.networking
 
+import com.nyahonk.multiplatformweather.Constants
 import io.ktor.client.*
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.*
@@ -22,6 +23,6 @@ class WeatherApi {
         private const val API_URL = "https://api.openweathermap.org/data/"
         private const val API_VER = "2.5/"
         private const val API_POLLUTION = "/air_pollution"
-        private const val PRIVATE_API_KEY = ""
+        private const val PRIVATE_API_KEY = Constants.WEATHER_API_KEY
     }
 }
